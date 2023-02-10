@@ -1,0 +1,3 @@
+[submodule "xwax-sys/xwax"]
+	path = xwax-sys/xwax
+	url = https://github.com/xwax/xwax.git

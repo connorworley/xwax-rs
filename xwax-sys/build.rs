@@ -1,20 +1,17 @@
 use std::env;
 use std::path::PathBuf;
 
-use git2::Repository;
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    cc::Build::new()
+        .file("xwax/lut.c")
+        .file("xwax/timecoder.c")
+        .compile("xwax");
 
-fn main() {
-    // Tell cargo to look for shared libraries in the specified directory
-    // println!("cargo:rustc-link-search=/path/to/lib");
-
-    // Tell cargo to tell rustc to link the system bzip2
-    // shared library.
-    // println!("cargo:rustc-link-lib=bz2");
+    println!("cargo:rustc-link-search={}", env::var("OUT_DIR")?);
+    println!("cargo:rustc-link-lib=xwax");
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");
-
-    let xwax_repo = Repository::clone("https://github.com/xwax/xwax.git", "./xwax").unwrap();
 
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
@@ -22,8 +19,8 @@ fn main() {
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
         // bindings for.
-        .header("stddef.h")
-        .header("./xwax/timecoder.h")
+        .header("wrapper.h")
+        .clang_arg(format!("-Ixwax"))
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
@@ -37,4 +34,6 @@ fn main() {
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
+
+    Ok(())
 }
