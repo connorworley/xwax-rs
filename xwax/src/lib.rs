@@ -8,6 +8,8 @@ pub struct Timecoder {
     tc: xwax_sys::timecoder,
 }
 
+unsafe impl Send for Timecoder {}
+
 impl Timecoder {
     pub fn init() -> Result<Self, XwaxError> {
         let mut tc = MaybeUninit::<xwax_sys::timecoder>::uninit();
