@@ -16,7 +16,7 @@ impl Timecoder {
         let timecoder_name = CString::new("serato_cd").unwrap();
         let timecoder_def = unsafe { xwax_sys::timecoder_find_definition(timecoder_name.as_ptr()) };
         unsafe {
-            xwax_sys::timecoder_init(tc.as_mut_ptr(), timecoder_def, 1.0, 44100, false);
+            xwax_sys::timecoder_init(tc.as_mut_ptr(), timecoder_def, 1.0, 44100, true);
         }
         Ok(Timecoder {
             tc: unsafe { tc.assume_init() },
