@@ -13,10 +13,10 @@ unsafe impl Send for Timecoder {}
 impl Timecoder {
     pub fn init() -> Result<Self, XwaxError> {
         let mut tc = MaybeUninit::<xwax_sys::timecoder>::uninit();
-        let timecoder_name = CString::new("serato_2a").unwrap();
+        let timecoder_name = CString::new("serato_cd").unwrap();
         let timecoder_def = unsafe { xwax_sys::timecoder_find_definition(timecoder_name.as_ptr()) };
         unsafe {
-            xwax_sys::timecoder_init(tc.as_mut_ptr(), timecoder_def, 1.0, 96000, true);
+            xwax_sys::timecoder_init(tc.as_mut_ptr(), timecoder_def, 1.0, 44100, false);
         }
         Ok(Timecoder {
             tc: unsafe { tc.assume_init() },
