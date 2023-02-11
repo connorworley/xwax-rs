@@ -3,8 +3,10 @@ use std::path::PathBuf;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     cc::Build::new()
+        .file("wrapper.c")
         .file("xwax/lut.c")
         .file("xwax/timecoder.c")
+        .include("xwax")
         .compile("xwax");
 
     println!("cargo:rustc-link-search={}", env::var("OUT_DIR")?);
@@ -20,7 +22,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
-        .clang_arg(format!("-Ixwax"))
+        .clang_arg("-Ixwax")
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
