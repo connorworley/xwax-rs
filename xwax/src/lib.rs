@@ -21,7 +21,7 @@ impl Timecoder {
         })
     }
 
-    pub fn submit(&mut self, samples: Vec<i16>) {
+    pub fn submit(&mut self, samples: &[i16]) {
         unsafe {
             xwax_sys::timecoder_submit(&mut self.tc, samples.as_ptr() as *mut i16, samples.len());
         }
